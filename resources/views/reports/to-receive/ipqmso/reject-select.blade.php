@@ -91,14 +91,14 @@
                 var countColumns = 0;
 
                 //Accomplishment Name/Report Category
-                var labellink = "{{ url('reports/report-category/:id') }}";
+                var labellink = "{{ url('/reports/report-category/:id/') }}";
 				var catlink = labellink.replace(':id', catID);
                 $.get(catlink, function (data){
                     document.getElementById('viewReportLabel').innerHTML = data;
                 });
 
                 //Accomplishment details
-                var url = "{{ url('reports/data/:id') }}";
+                var url = "{{ url('/reports/data/:id/') }}";
 				var newlink = url.replace(':id', catID);
 				$.get(newlink, function (data){
                     Object.keys(data).forEach(function(k){
@@ -108,7 +108,7 @@
                         $('#row-'+countColumns).append('<td class="report-content text-left">'+data[k]+'</td>');
                     });
                 });
-                var urlGetDoc = "{{ url('reports/docs/:id') }}".replace(':id', catID);
+                var urlGetDoc = "{{ url('/reports/docs/:id/') }}".replace(':id', catID);
 				$.get(urlGetDoc, function (data) {
                     data.forEach(function (item){
                         var newDocLink = docLink.replace(':filename', item)

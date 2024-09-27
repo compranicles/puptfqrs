@@ -66,10 +66,10 @@
                                         </thead>
                                         <tbody>
                                             @forelse ($department_accomps as $row)
-                                            <tr role="button">
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">{{ $loop->iteration }}</td>
-                                                <td class="report-view button-view" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">{{ $row->report_category }}</td>
-                                                <td class="report-view button-view" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                            <tr role="button" class="button-view"  data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">{{ $loop->iteration }}</td>
+                                                <td class="report-view">{{ $row->report_category }}</td>
+                                                <td class="report-view">
                                                     @if (isset($row->report_details->title))
                                                         {{ $row->report_details->title }}
                                                     @elseif (isset($row->report_details->publication_or_audio_visual))
@@ -118,9 +118,9 @@
                                                         {{ $row->report_details->degree }}
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">{{ $row->last_name.', '.$row->first_name.(($row->middle_name === null) ? '' : ' '.$row->middle_name).(($row->suffix === null) ? '' : ' '.$row->suffix) }}</td>
-                                                <td class="report-view button-view" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">{{ $department_names[$row->id] ?? '-' }}</td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view">{{ $row->last_name.', '.$row->first_name.(($row->middle_name === null) ? '' : ' '.$row->middle_name).(($row->suffix === null) ? '' : ' '.$row->suffix) }}</td>
+                                                <td class="report-view">{{ $department_names[$row->id] ?? '-' }}</td>
+                                                <td class="report-view text-center">
                                                     @if ($row->report_category_id >= 1 && $row->report_category_id <= 8)
                                                         @if ($row->researcher_approval === null)
                                                             @if ($row->format == 'f')
@@ -137,7 +137,7 @@
                                                         N/A
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">
                                                     @if (($row->report_category_id >= 12 && $row->report_category_id <= 14) || ($row->report_category_id >= 34 && $row->report_category_id <= 37) || $row->report_category_id == 22 || $row->report_category_id == 23)
                                                         @if ($row->extensionist_approval === null)
                                                             @if ($row->format == 'f')
@@ -154,7 +154,7 @@
                                                         N/A
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">
                                                     @if ($row->format == 'a')
                                                         @if ($row->report_category_id >= 1 && $row->report_category_id <= 8)
                                                             @if ($row->chairperson_approval === null)
@@ -241,7 +241,7 @@
                                                         @endif
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">
                                                     @if ($row->chairperson_approval === 0)
                                                         -
                                                     @elseif ($row->chairperson_approval === null)
@@ -258,7 +258,7 @@
                                                         @endif
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">
                                                     @if ($row->dean_approval === 0)
                                                         -
                                                     @elseif ($row->dean_approval === null)
@@ -275,7 +275,7 @@
                                                         @endif
                                                     @endif
                                                 </td>
-                                                <td class="report-view button-view text-center" data-toggle="modal" data-target="#viewReport" data-url="{{ route('document.view', ':filename') }}" data-id="{{ $row->id }}" data-report-category="{{ $row->report_category }}">
+                                                <td class="report-view text-center">
                                                     @if ($row->sector_approval === 0)
                                                         -
                                                     @elseif ($row->sector_approval === null)
@@ -462,12 +462,13 @@
             // });
         </script>
         <script>
-            $(document).on('click', '.button-view', function(){
+            $(document).on('click', '.button-view', function(event){
+                event.stopPropagation();
                 var catID = $(this).data('id');
                 var link = $(this).data('url');
 
                 var countColumns = 0;
-                var url = "{{ url('reports/data/:id') }}";
+                var url = "{{ url('/reports/data/:id/') }}";
 				var newlink = url.replace(':id', catID);
 				$.get(newlink, function (data){
                     Object.keys(data).forEach(function(k){
@@ -477,7 +478,7 @@
                         $('#row-'+countColumns).append('<td class="report-content text-left">'+data[k]+'</td>');
                     });
                 });
-               var urldoc = "{{ url('reports/docs/:id') }}";
+               var urldoc = "{{ url('/reports/docs/:id/') }}";
 				var newlinkdoc = urldoc.replace(':id', catID);
 				$.get(newlinkdoc, function (data) {
                     data.forEach(function (item){
@@ -495,7 +496,7 @@
             $(document).on('click', '.button-deny', function () {
                 var categoryID = $(this).data('id');
 
-               var urldetails = "{{ url('reports/reject-details/:id') }}";
+               var urldetails = "{{ url('/reports/reject-details/:id/') }}";
 				var newlink2 = urldetails.replace(':id', categoryID);
 				$.get(newlink2, function (data) {
                     var position = data.position_name;
@@ -598,7 +599,7 @@
             $('#quarterYearFilter').on('click', function () {
                 var year_reported = $('#yearFilter').val();
                 var quarter = $('#quarterFilter').val();
-                var link = "{{ url('reports/consolidate/extension/reportYearFilter/:department/:year/:quarter') }}";
+                var link = "{{ url('/reports/consolidate/extension/reportYearFilter/:department/:year/:quarter/') }}";
                 var newLink = link.replace(':department', "{{$department['id']}}").replace(':year', year_reported).replace(':quarter', quarter);
                 window.location.replace(newLink);
             });

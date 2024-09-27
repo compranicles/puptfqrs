@@ -294,14 +294,15 @@
 
         });
 
-        $(document).on('click', '.button-view', function(){
+        $(document).on('click', '.button-view', function(event){
+            event.stopPropagation();
             var catID = $(this).data('id');
             var link = $(this).data('url');
             var accept = $(this).data('accept');
             var deny = $(this).data('deny');
             var countColumns = 0;
 
-            var url = "{{ url('reports/data/:id') }}";
+            var url = "{{ url('/reports/data/:id/') }}";
 			var newlink = url.replace(':id', catID);
 			$.get(newlink, function (data){
                 Object.keys(data).forEach(function(k){
@@ -311,7 +312,7 @@
                     $('#row-'+countColumns).append('<td class="report-content text-left">'+data[k]+'</td>');
                 });
             });
-            var urldoc = "{{ url('reports/docs/:id') }}";
+            var urldoc = "{{ url('/reports/docs/:id/') }}";
 			var newlinkdoc = urldoc.replace(':id', catID);
 			$.get(newlinkdoc, function (data) {
                 data.forEach(function (item){
